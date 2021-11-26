@@ -1,9 +1,16 @@
 import axios from "axios"
 
-import { PRODUCT_LIST_FAIL, PRODUCT_LIST_SUCCESS, PRODUCT_LIST_REQUEST } from "../constants/productConstans"
+import { 
+    PRODUCT_LIST_FAIL, 
+    PRODUCT_LIST_SUCCESS, 
+    PRODUCT_LIST_REQUEST, 
+    PRODUCT_DETAIL_REQUEST,
+    PRODUCT_DETAIL_FAIL,
+    PRODUCT_DETAIL_SUCCESS,
+} from "../constants/productConstans"
 
 
-const listProducts =  ()=> async (dispatch) => {
+export const listProducts =  ()=> async (dispatch) => {
 
     try {
         dispatch({type: PRODUCT_LIST_REQUEST})
@@ -19,9 +26,25 @@ const listProducts =  ()=> async (dispatch) => {
                 ? error.reponse.data.message
                 : error.message,
         })
-    }
-        
-    
+    }    
 }
-
 export default listProducts
+
+export const listProductDetails = (id)=> async (dispatch) => {
+
+    try {
+        dispatch({type: PRODUCT_DETAIL_REQUEST})
+        const { data } = await axios.get(`/api/products/${id}`)
+        dispatch({
+            type: PRODUCT_DETAIL_SUCCESS,
+            payload: data
+        })
+    } catch (error) {
+        dispatch({
+            type: PRODUCT_DETAIL_FAIL,
+            payload: error.reponse && error.reponse.data.message
+                ? error.reponse.data.message
+                : error.message,
+        })
+    }    
+}
